@@ -21,11 +21,12 @@
  *
  */
 
-#include <config.h>
+#include "config.h"
 #include <glib.h>
 #include <glib/gi18n-lib.h>
 #include <gtk/gtk.h>
 #include <purple.h>
+#include <gtkplugin.h>
 #include <gtkblist.h>
 #include <gtkconv.h>
 

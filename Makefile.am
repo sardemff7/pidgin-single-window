@@ -8,15 +8,14 @@ AM_MAKEFLAGS = --no-print-directory
 SUBDIRS = po
 
 AM_CFLAGS += \
-	-DLOCALEDIR=\"$(localedir)\" \
-	-I $(srcdir)/include
+	-DLOCALEDIR=\"$(localedir)\"
 
 # Plugin
 plugin_LTLIBRARIES = \
 	pidgin-single-window.la
 
 pidgin_single_window_la_SOURCES = \
-	include/config.h \
+	src/config.h \
 	src/single-window.c
 
 pidgin_single_window_la_CFLAGS = \
