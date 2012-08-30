@@ -90,8 +90,13 @@ _pidgin_single_conv_placement(PidginConversation *conv)
         return;
 
     pidgin_conv_window_add_gtkconv(conv_window, conv);
-    pidgin_conv_window_hide(conv_window);
     gtk_widget_show(conv_vbox);
+}
+
+static void
+_pidgin_single_window_hide_buddy_list_window(GtkWidget *widget, gpointer user_data)
+{
+    gtk_widget_hide(widget);
 }
 
 static void
@@ -107,16 +112,13 @@ _pidgin_single_window_gtkblist_created(PurpleBuddyList *purple_blist)
     gtk_widget_reparent(blist->main_vbox, single_window_hbox);
     gtk_widget_reparent(conv_vbox, single_window_hbox);
 
-    gtk_container_add(GTK_CONTAINER(blist->window), single_window_hbox);
+    gtk_container_add(GTK_CONTAINER(conv_window->window), single_window_hbox);
     gtk_widget_show(single_window_hbox);
+    gtk_widget_show(conv_window->window);
 
-    gtk_window_set_title(GTK_WINDOW(blist->window) _("Pidgin single window"));
-}
 
-static void
-_pidgin_single_window_hide_conv_window(GtkWidget *widget, gpointer user_data)
-{
-    gtk_widget_hide(widget);
+    g_signal_connect(blist->window, "show", G_CALLBACK(_pidgin_single_window_hide_buddy_list_window), NULL);
+    gtk_widget_hide(blist->window);
 }
 
 static gboolean
@@ -133,9 +135,9 @@ _pidgin_single_window_load(PurplePlugin *plugin)
     purple_prefs_trigger_callback(PIDGIN_PREFS_ROOT "/conversations/placement");
 
     single_window_hbox = gtk_hbox_new(TRUE, 0);
-
     conv_window = pidgin_conv_window_new();
-    g_signal_connect(conv_window->window, "show", G_CALLBACK(_pidgin_single_window_hide_conv_window), NULL);
+
+    gtk_window_set_title(GTK_WINDOW(conv_window->window), _("Pidgin single window"));
 
     conv_vbox = g_object_ref(gtk_widget_get_parent(conv_window->notebook));
     gtk_widget_hide(conv_vbox);
